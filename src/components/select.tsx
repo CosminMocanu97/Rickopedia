@@ -3,14 +3,14 @@ import styled from 'styled-components';
 import picklerick from '../assets/picklerick.png'
 
 const Select = styled.select`
-    height:40px;
+    height:35px;
     width:150px;
     border-radius: 5px;
     outline:none;
     box-shadow: 0px 0px 3px 2px rgb(180,217,74);
     font-weight:bold;
     font-family:RickAndMorty;
-    font-size:20px;
+    font-size:18px;
     background-color:rgb(26,24,38);
     padding:3px 10px;
 

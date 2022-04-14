@@ -5,8 +5,8 @@ import ship from '../assets/ship.png'
 const Button = styled.button`
     background:transparent;
     border:none;
-    height:145px;
-    width:160px;
+    height:125px;
+    width:130px;
     border-radius:50%;
     img {
         animation: spin infinite 10s linear;
