@@ -7,6 +7,7 @@ import SelectField from "./components/select";
 import Card from "./components/card";
 import Button from "./components/button";
 import Pagination from "./components/pagination";
+import Loading from "./components/loader";
 // Styled only components
 import { Form } from "./styledComponents/form";
 import { Catalog } from "./styledComponents/catalog";
@@ -29,22 +30,25 @@ import { Container } from "./styledComponents/appContainer";
 import { Error } from "./styledComponents/error";
 // Reducer
 import { reducer } from "./reducers/appReducer";
+import { newMeesseks } from "./assets/meeseeks";
 
-const song = require("./assets/meeseeks.mp3");
+const audio = require("./assets/meeseeks.mp3");
 
 const App: React.FC = () => {
+  let meeseeksVoice = new Audio(audio);
   const navigate = useNavigate()
-  const initialState : StateInterface = {
+  const initialState: StateInterface = {
     data: [],
     name: "",
     status: "",
     currentPage: 1,
     totalPages: 0,
     error: false,
-    errorMessage: ""
+    errorMessage: "",
+    loading: true
   };
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { data, name, status, currentPage, totalPages, error, errorMessage } = state
+  const { data, name, status, currentPage, totalPages, error, errorMessage, loading } = state
 
   const [options, setOptions] = useState<string[]>([]);
 
@@ -54,12 +58,15 @@ const App: React.FC = () => {
     name: string,
     status: string
   ) => {
+    dispatch({ type: "LOADING_START" })
     try {
       let response = await getCharactersData(pageNumber, name, status);
       dispatch({ type: "ERROR_DISABLED" })
-      dispatch({ type: "FETCH_SUCCESS", payload: { data: response.data.results, totalPages: response.data.info.pages }})
+      dispatch({ type: "FETCH_SUCCESS", payload: { data: response.data.results, totalPages: response.data.info.pages } })
+      dispatch({ type: "LOADING_OVER" })
     } catch (error) {
-      dispatch({ type: "ERROR_ENABLED", payload: "No results found!"})
+      dispatch({ type: "ERROR_ENABLED", payload: "No results found!" })
+      dispatch({ type: "LOADING_OVER" })
     }
   };
   /* [Needs work] function used to get options for the select filter (the problem with this function
@@ -73,27 +80,27 @@ const App: React.FC = () => {
     setOptions(Array.from(selectOptions));
   };
 
-  let audio = new Audio(song);
   const start = () => {
-    audio.play();
+    meeseeksVoice.play();
+    dispatch({ type: "MEESEEKS_BOX", payload: newMeesseks })
+    console.log(state.data)
   };
 
-  
   // function that resets the form on button click (portal icon)
   const handleFormReset = () => {
     dispatch({ type: "RESET_FORM" })
   };
   // function that handles pagination
   const handlePagination = (pageNumber: number) => {
-    dispatch({ type: "PAGE_CHANGE", payload : pageNumber})
+    dispatch({ type: "PAGE_CHANGE", payload: pageNumber })
   };
   // function for the onChange event on status select
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    dispatch({ type: "SELECT_CHANGE", payload: e?.target.value})
+    dispatch({ type: "SELECT_CHANGE", payload: e?.target.value })
   };
   // function for the onChange event for the character's name input
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({ type: "INPUT_CHANGE", payload: e?.target.value})
+    dispatch({ type: "INPUT_CHANGE", payload: e?.target.value })
   };
   /* added lodash debounce (kinda got lazy to write my own function for this) which updates the state 
   value for the input after 0.3 seconds to minimize the number of api calls */
@@ -109,54 +116,57 @@ const App: React.FC = () => {
 
   return (
     <Container>
-      <img onClick={start} src={meeseeksBox} alt="" className="meeseeksBox" />
-      <img src={logo} alt="logo" className="logo" />
-
-      <Form onReset={handleFormReset}>
-        <TextField onChange={debouncedInput} placeholder={`Character's name`} />
-        <SelectField
-          value={status}
-          onChange={handleSelectChange}
-          options={options}
-        />
-        <Button type="reset" imgSrc={portal} alt="" />
-      </Form>
-
-      {error ? (
-        <Error>
-          <img src={rick} alt="" />
-          <p> {errorMessage} </p>
-        </Error>
-      ) : (
+      {loading ? <Loading /> :
         <>
-          <Catalog>
-            {data.map((data: CharacterInterface, index: number) => (
-              <Card
-                key={index}
-                onClick={() => navigate(`/${data.id}`)}
-                img={
-                  data.status === "Alive"
-                    ? heart
-                    : data.status === "Dead"
-                    ? dead
-                    : unknown
-                }
-                name={data.name}
-                status={data.status}
-                avatar={data.image}
-              />
-            ))}
-          </Catalog>
+          <img onClick={start} src={meeseeksBox} alt="" className="meeseeksBox" />
+          <img src={logo} alt="logo" className="logo" />
 
-          {totalPages > 1 && (
-            <Pagination
-              page={state.currentPage}
-              totalPages={totalPages}
-              handlePagination={handlePagination}
+          <Form onReset={handleFormReset}>
+            <TextField onChange={debouncedInput} placeholder={`Character's name`} />
+            <SelectField
+              value={status}
+              onChange={handleSelectChange}
+              options={options}
             />
+            <Button type="reset" imgSrc={portal} alt="" />
+          </Form>
+
+          {error ? (
+            <Error>
+              <img src={rick} alt="" />
+              <p> {errorMessage} </p>
+            </Error>
+          ) : (
+            <>
+              <Catalog>
+                {data.map((data: CharacterInterface, index: number) => (
+                  <Card
+                    key={index}
+                    onClick={() => navigate(`/${data.id}`)}
+                    img={
+                      data.status === "Alive"
+                        ? heart
+                        : data.status === "Dead"
+                          ? dead
+                          : unknown
+                    }
+                    name={data.name}
+                    status={data.status}
+                    avatar={data.image}
+                  />
+                ))}
+              </Catalog>
+
+              {totalPages > 1 && (
+                <Pagination
+                  page={state.currentPage}
+                  totalPages={totalPages}
+                  handlePagination={handlePagination}
+                />
+              )}
+            </>
           )}
-        </>
-      )}
+        </>}
     </Container>
   );
 };

@@ -1,6 +1,7 @@
 import React, { useEffect, useReducer } from "react";
 import classNames from "classnames";
 import { useParams, useNavigate } from "react-router-dom";
+import Loading from "./loader";
 // API
 import { getSingleCharacterData } from "../api/getSingleCharacter";
 import { getEpisodeName } from "../api/getEpisode";
@@ -28,13 +29,15 @@ const CharacterDetails = () => {
   const initialState: CharacterStateInterface = {
     data: undefined,
     episodes: [],
+    loading: true
   };
   const [state, dispatch] = useReducer(characterReducer, initialState);
-  const { data, episodes } = state;
+  const { data, episodes, loading } = state;
 
   // API call to get character's data and name of all episodes
   useEffect(() => {
     const fetchData = async (id: string) => {
+      dispatch({ type: "LOADING_START" })
       try {
         let response = await getSingleCharacterData(id);
         let URLs = response.data.episode;
@@ -43,7 +46,9 @@ const CharacterDetails = () => {
           type: "FETCH_SUCCESS",
           payload: { data: response.data, episodeList: listOfEpisodes },
         });
+        dispatch({ type: "LOADING_OVER" })
       } catch (error) {
+        dispatch({ type: "LOADING_OVER" })
         navigate("/");
       }
     };
@@ -53,7 +58,8 @@ const CharacterDetails = () => {
 
   return (
     <CharacterDetailsContainer>
-      {data && (
+    {loading ? <Loading /> :
+      data && (
         <div className="wrapper">
           <div className="profile">
             <h3> {data.name} </h3>

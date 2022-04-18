@@ -4,4 +4,5 @@ import { EpisodeInterface } from "./episodeProps";
 export interface CharacterStateInterface { 
     data: CharacterInterface | undefined;
     episodes: Array<EpisodeInterface>;
+    loading: boolean;
 }

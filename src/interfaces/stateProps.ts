@@ -7,5 +7,6 @@ export interface StateInterface {
     currentPage: number;
     totalPages: number,
     error: boolean,
-    errorMessage: string
+    errorMessage: string,
+    loading:boolean,
 }

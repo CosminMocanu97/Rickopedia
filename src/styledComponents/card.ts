@@ -13,6 +13,7 @@ export const CardContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 5px;
+  animation: fadein 1s;
 
   .avatar {
     width: 100%;
@@ -36,5 +37,14 @@ export const CardContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  @keyframes fadein {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
   }
 `;

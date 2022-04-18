@@ -11,10 +11,14 @@ type Action =
       payload: string;
     }
   | {
+    type: "MEESEEKS_BOX";
+    payload: CharacterInterface;
+    }
+  | {
       type: "PAGE_CHANGE";
       payload: number;
     }
-  | { type: "RESET_FORM" | "ERROR_DISABLED" };
+  | { type: "RESET_FORM" | "ERROR_DISABLED" | "LOADING_OVER" | "LOADING_START" };
 
 export const reducer = (state: StateInterface, action: Action) => {
   switch (action.type) {
@@ -66,6 +70,27 @@ export const reducer = (state: StateInterface, action: Action) => {
         error: false,
         errorMessage: "",
       };
+    }
+
+    case "MEESEEKS_BOX": {
+      return {
+        ...state, 
+        data: [action.payload, ...state.data]
+      }
+    }
+
+    case "LOADING_START" : {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case "LOADING_OVER" : {
+      return {
+        ...state,
+        loading: false
+      }
     }
 
     default:

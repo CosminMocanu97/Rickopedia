@@ -22,6 +22,7 @@ export const CharacterDetailsContainer = styled.div`
     width: 60%;
     white-space: normal;
     font-size: 18px;
+    animation: fadein 1s;
   }
 
   .profile {
