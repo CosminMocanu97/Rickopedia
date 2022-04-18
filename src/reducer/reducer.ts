@@ -1,6 +1,22 @@
+import { CharacterInterface } from "../interfaces/characterProps";
 import { StateInterface } from "../interfaces/stateProps";
 
-export const reducer = (state: StateInterface, action: any) => {
+type Action =
+  | {
+      type: "FETCH_SUCCESS";
+      payload: { data: Array<CharacterInterface>; totalPages: number };
+    }
+  | {
+      type: "INPUT_CHANGE" | "SELECT_CHANGE" | "ERROR_ENABLED";
+      payload: string;
+    }
+  | {
+      type: "PAGE_CHANGE";
+      payload: number;
+    }
+  | { type: "RESET_FORM" | "ERROR_DISABLED" };
+
+export const reducer = (state: StateInterface, action: Action) => {
   switch (action.type) {
     case "FETCH_SUCCESS":
       return {
