@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useReducer } from "react";
 import { debounce } from "lodash";
+import { useNavigate } from 'react-router-dom';
 // Components
 import TextField from "./components/input";
 import SelectField from "./components/select";
@@ -32,6 +33,7 @@ import { reducer } from "./reducer/reducer";
 const song = require("./assets/meeseeks.mp3");
 
 const App: React.FC = () => {
+  const navigate = useNavigate()
   const initialState : StateInterface = {
     data: [],
     name: "",
@@ -208,7 +210,7 @@ const App: React.FC = () => {
             {data.map((data: CharacterInterface, index: number) => (
               <Card
                 key={index}
-                onClick={start}
+                onClick={() => navigate(`/${data.id}`)}
                 img={
                   data.status === "Alive"
                     ? heart
