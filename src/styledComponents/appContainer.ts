@@ -20,6 +20,7 @@ export const Container = styled.div`
   .logo {
     width: 35%;
     min-width: 270px;
+    user-select: none;
   }
 
   .meeseeksBox {
