@@ -1,11 +1,10 @@
-
 import styled from "styled-components";
-import background from "../assets/background2.png";
+import background from "../assets/background2.webp";
 
 export const CharacterDetailsContainer = styled.div`
-  height: 100%;
-  min-height: 100vh;
-  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+height: 100%;
+min-height: 100vh;
+  background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
     url(${background});
   background-repeat: no-repeat;
   background-position: center center;
@@ -126,7 +125,8 @@ export const CharacterDetailsContainer = styled.div`
     display: flex;
     justifiy-content: center;
     align-items: center;
-
+    font-weight:bold;
+    
     img {
       height: 50px;
     }
@@ -149,7 +149,8 @@ export const CharacterDetailsContainer = styled.div`
     justifiy-content: center;
     align-items: center;
     color: #e0ac69;
-
+    font-weight:bold;
+    
     img {
       margin-right: 5px;
       height: 40px;
@@ -161,6 +162,7 @@ export const CharacterDetailsContainer = styled.div`
     justifiy-content: center;
     align-items: center;
     color: #858585;
+    font-weight:bold;
 
     img {
       height: 50px;
@@ -181,6 +183,9 @@ export const CharacterDetailsContainer = styled.div`
   }
 
   @media (max-width: 420px) {
+    .camera {
+        height:15vh;
+    }
     .characterInfo {
       div {
         flex-direction: column;

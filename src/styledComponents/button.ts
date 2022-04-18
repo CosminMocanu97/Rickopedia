@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import ship from "../assets/ship.png";
+import ship from "../assets/ship.webp";
 
 export const Button = styled.button`
     background:transparent;

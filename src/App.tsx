@@ -12,13 +12,13 @@ import Loading from "./components/loader";
 import { Form } from "./styledComponents/form";
 import { Catalog } from "./styledComponents/catalog";
 // Images
-import logo from "./assets/rick-and-morty-logo.png";
-import heart from "./assets/heart.png";
-import dead from "./assets/dead.png";
-import unknown from "./assets/unknown.png";
-import portal from "./assets/portal.png";
-import meeseeksBox from "./assets/meeseeksBox.png";
-import rick from "./assets/rick.png";
+import logo from "./assets/rick-and-morty-logo.webp";
+import heart from "./assets/heart.webp";
+import dead from "./assets/dead.webp";
+import unknown from "./assets/unknown.webp";
+import portal from "./assets/portal.webp";
+import meeseeksBox from "./assets/meeseeksBox.webp";
+import rick from "./assets/rick.webp";
 // APIs
 import { getCharactersData } from "./api/getCharacters";
 import { getSelectOptions } from "./api/getSelectOptions";
@@ -50,6 +50,7 @@ const App: React.FC = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { data, name, status, currentPage, totalPages, error, errorMessage, loading } = state
 
+  const [inputValue, setInputValue] = useState<string>('')
   const [options, setOptions] = useState<string[]>([]);
 
   // function that returns information about the characters
@@ -89,6 +90,7 @@ const App: React.FC = () => {
   // function that resets the form on button click (portal icon)
   const handleFormReset = () => {
     dispatch({ type: "RESET_FORM" })
+    setInputValue('')
   };
   // function that handles pagination
   const handlePagination = (pageNumber: number) => {
@@ -100,11 +102,12 @@ const App: React.FC = () => {
   };
   // function for the onChange event for the character's name input
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({ type: "INPUT_CHANGE", payload: e?.target.value })
+    setInputValue(e?.target.value)
+    debouncedInput(e?.target.value)
   };
-  /* added lodash debounce (kinda got lazy to write my own function for this) which updates the state 
-  value for the input after 0.3 seconds to minimize the number of api calls */
-  const debouncedInput = useMemo(() => debounce(handleChange, 300), []);
+  /* added lodash debounce (kinda got lazy to write my own function for this) which updates the reducer state 
+  for the input after 0.3 seconds to minimize the number of api calls */
+  const debouncedInput = useMemo(() => debounce((value) => dispatch({ type: "INPUT_CHANGE", payload: value }), 300), []);
   // onMount set the options for the select input based on the existing statuses returned from the /characters api
   useEffect(() => {
     getOptions();
@@ -116,13 +119,11 @@ const App: React.FC = () => {
 
   return (
     <Container>
-      {loading ? <Loading /> :
-        <>
           <img onClick={start} src={meeseeksBox} alt="" className="meeseeksBox" />
           <img src={logo} alt="logo" className="logo" />
 
           <Form onReset={handleFormReset}>
-            <TextField onChange={debouncedInput} placeholder={`Character's name`} />
+            <TextField value={inputValue} onChange={handleChange} placeholder={`Character's name`} />
             <SelectField
               value={status}
               onChange={handleSelectChange}
@@ -131,7 +132,8 @@ const App: React.FC = () => {
             <Button type="reset" imgSrc={portal} alt="" />
           </Form>
 
-          {error ? (
+          {loading ? <Loading /> :
+          error ? (
             <Error>
               <img src={rick} alt="" />
               <p> {errorMessage} </p>
@@ -166,7 +168,6 @@ const App: React.FC = () => {
               )}
             </>
           )}
-        </>}
     </Container>
   );
 };

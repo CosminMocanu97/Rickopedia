@@ -6,15 +6,15 @@ import Loading from "./loader";
 import { getSingleCharacterData } from "../api/getSingleCharacter";
 import { getEpisodeName } from "../api/getEpisode";
 // Images
-import male from "../assets/male.png";
-import female from "../assets/female.png";
-import heart from "../assets/heart.png";
-import species from "../assets/species.png";
-import location from "../assets/location.png";
-import camera from "../assets/camera.png";
-import genderless from "../assets/genderless.png";
-import unknown from "../assets/unknown.png";
-import dead from "../assets/dead.png";
+import male from "../assets/male.webp";
+import female from "../assets/female.webp";
+import heart from "../assets/heart.webp";
+import species from "../assets/species.webp";
+import location from "../assets/location.webp";
+import camera from "../assets/camera.webp";
+import genderless from "../assets/genderless.webp";
+import unknown from "../assets/unknown.webp";
+import dead from "../assets/dead.webp";
 // Styled component
 import { CharacterDetailsContainer } from "../styledComponents/characterDetailsContainer";
 // Interface

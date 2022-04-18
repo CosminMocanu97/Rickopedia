@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import background from "../assets/background.jpg";
-import gun from "../assets/gun.png";
+import gun from "../assets/gun.webp";
 
 export const Container = styled.div`
   height: 100%;

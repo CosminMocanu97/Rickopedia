@@ -1,4 +1,4 @@
-import portal from '../assets/portal.png'
+import portal from '../assets/portal.webp'
 import styled from 'styled-components';
 
 const Loader = styled.div`

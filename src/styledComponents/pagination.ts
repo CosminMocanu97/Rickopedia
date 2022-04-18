@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import gun from "../assets/gun.png";
+import gun from "../assets/gun.webp";
 
 export const PaginationWrapper = styled.div`
   padding: 2rem 0;

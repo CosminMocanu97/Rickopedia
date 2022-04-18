@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import gun from "../assets/gun.png";
+import gun from "../assets/gun.webp";
 
 export const CardContainer = styled.div`
   box-shadow: 0px 0px 3px 2px rgb(180, 217, 74);
