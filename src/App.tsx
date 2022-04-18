@@ -28,7 +28,7 @@ import { StateInterface } from "./interfaces/stateProps";
 import { Container } from "./styledComponents/appContainer";
 import { Error } from "./styledComponents/error";
 // Reducer
-import { reducer } from "./reducer/reducer";
+import { reducer } from "./reducers/appReducer";
 
 const song = require("./assets/meeseeks.mp3");
 
