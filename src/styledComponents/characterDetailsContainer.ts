@@ -17,6 +17,7 @@ min-height: 100vh;
 
   .wrapper {
     margin-left: 4%;
+    min-height:100vh;
     height: auto;
     width: 60%;
     white-space: normal;
