@@ -2,14 +2,14 @@ import styled from "styled-components";
 import background from "../assets/background2.webp";
 
 export const CharacterDetailsContainer = styled.div`
-height: 100%;
-min-height: 100vh;
+  height: 100%;
+  min-height: 100vh;
   background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
     url(${background});
   background-repeat: no-repeat;
   background-position: center center;
   background-attachment: fixed;
-  background-size: cover;
+
   text-align: center;
   display: flex;
   align-items: center;
@@ -17,7 +17,7 @@ min-height: 100vh;
 
   .wrapper {
     margin-left: 4%;
-    min-height:100vh;
+    min-height: 100vh;
     height: auto;
     width: 60%;
     white-space: normal;
@@ -126,8 +126,8 @@ min-height: 100vh;
     display: flex;
     justifiy-content: center;
     align-items: center;
-    font-weight:bold;
-    
+    font-weight: bold;
+
     img {
       height: 50px;
     }
@@ -150,8 +150,8 @@ min-height: 100vh;
     justifiy-content: center;
     align-items: center;
     color: #e0ac69;
-    font-weight:bold;
-    
+    font-weight: bold;
+
     img {
       margin-right: 5px;
       height: 40px;
@@ -163,7 +163,7 @@ min-height: 100vh;
     justifiy-content: center;
     align-items: center;
     color: #858585;
-    font-weight:bold;
+    font-weight: bold;
 
     img {
       height: 50px;
@@ -185,7 +185,7 @@ min-height: 100vh;
 
   @media (max-width: 420px) {
     .camera {
-        height:15vh;
+      height: 15vh;
     }
     .characterInfo {
       div {
@@ -205,5 +205,9 @@ min-height: 100vh;
     .list {
       padding: 5px;
     }
+  }
+
+  @media (min-width: 641px) {
+    background-size: cover;
   }
 `;

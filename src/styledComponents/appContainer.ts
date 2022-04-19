@@ -10,7 +10,6 @@ export const Container = styled.div`
   background-repeat: no-repeat;
   background-position: center center;
   background-attachment: fixed;
-  background-size: cover;
   text-align: center;
   display: flex;
   align-items: center;
@@ -29,5 +28,9 @@ export const Container = styled.div`
     left: 0;
     margin: 10px;
     cursor: url(${gun}), pointer;
+  }
+
+  @media (min-width: 641px) {
+    background-size: cover;
   }
 `;
