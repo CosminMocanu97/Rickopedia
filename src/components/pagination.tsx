@@ -1,7 +1,10 @@
-
-import classNames from "classnames";
 import { PaginationProps } from "../interfaces/paginationProps";
-import { PaginationWrapper } from "../styledComponents/pagination";
+import {
+  PaginationWrapper,
+  Separator,
+  PageItem,
+  ActivePageItem,
+} from "../styledComponents/pagination";
 
 const Pagination = ({
   page,
@@ -9,89 +12,62 @@ const Pagination = ({
   handlePagination,
 }: PaginationProps) => {
   return (
-    <PaginationWrapper>
+    <PaginationWrapper page={page} totalPages={totalPages}>
       {page !== 1 && (
-        <button
-          onClick={() => handlePagination(page - 1)}
-          type="button"
-          className="pageItem"
-        >
-          &lt;
-        </button>
+        <>
+          <PageItem onClick={() => handlePagination(page - 1)} type="button">
+            &lt;
+          </PageItem>
+
+          <PageItem onClick={() => handlePagination(1)} type="button">
+            {1}
+          </PageItem>
+        </>
       )}
-      <button
-        onClick={() => handlePagination(1)}
-        type="button"
-        className={classNames("pageItem", {
-          active: page === 1,
-        })}
-      >
-        {1}
-      </button>
-      {page > 3 && <div className="separator">...</div>}
+      {page > 3 && <Separator>...</Separator>}
+
       {page === totalPages && totalPages > 3 && (
-        <button
-          onClick={() => handlePagination(page - 2)}
-          type="button"
-          className="pageItem"
-        >
+        <PageItem onClick={() => handlePagination(page - 2)} type="button">
           {page - 2}
-        </button>
+        </PageItem>
       )}
+
       {page > 2 && (
-        <button
-          onClick={() => handlePagination(page - 1)}
-          type="button"
-          className="pageItem"
-        >
+        <PageItem onClick={() => handlePagination(page - 1)} type="button">
           {page - 1}
-        </button>
+        </PageItem>
       )}
-      {page !== 1 && page !== totalPages && (
-        <button
-          onClick={() => handlePagination(page)}
-          type="button"
-          className={["pageItem", "active"].join(" ")}
-        >
+
+      {(page === 1 ||
+        (page !== 1 && page !== totalPages) ||
+        page === totalPages) && (
+        <ActivePageItem onClick={() => handlePagination(page)} type="button">
           {page}
-        </button>
+        </ActivePageItem>
       )}
+
       {page < totalPages - 1 && (
-        <button
-          onClick={() => handlePagination(page + 1)}
-          type="button"
-          className="pageItem"
-        >
+        <PageItem onClick={() => handlePagination(page + 1)} type="button">
           {page + 1}
-        </button>
+        </PageItem>
       )}
       {page === 1 && totalPages > 3 && (
-        <button
-          onClick={() => handlePagination(page + 2)}
-          type="button"
-          className="pageItem"
-        >
+        <PageItem onClick={() => handlePagination(page + 2)} type="button">
           {page + 2}
-        </button>
+        </PageItem>
       )}
-      {page < totalPages - 2 && <div className="separator">...</div>}
-      <button
-        onClick={() => handlePagination(totalPages)}
-        type="button"
-        className={classNames("pageItem", {
-          active: page === totalPages,
-        })}
-      >
-        {totalPages}
-      </button>
+
+      {page < totalPages - 2 && <Separator>...</Separator>}
       {page !== totalPages && (
-        <button
-          onClick={() => handlePagination(page + 1)}
-          type="button"
-          className="pageItem"
-        >
-          &gt;
-        </button>
+        <>
+          <PageItem onClick={() => handlePagination(totalPages)} type="button">
+            {totalPages}
+          </PageItem>
+
+          <PageItem onClick={() => handlePagination(page + 1)} type="button">
+            &gt;
+          </PageItem>
+        </>
       )}
     </PaginationWrapper>
   );

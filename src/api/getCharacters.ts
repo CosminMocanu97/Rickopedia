@@ -1,9 +1,20 @@
 import axios from "axios";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 
-export const getCharactersData = async (pageNumber: number, name : string, status : string) => {
-  try {
-    return await axios.get(`https://rickandmortyapi.com/api/character/?page=${pageNumber}&name=${name}&status=${status}`);
-  } catch (error) {
-    throw error;
-  }
-};
+export const getCharacters = createAsyncThunk(
+    "app/getCharacters",
+    async ({
+      currentPage,
+      name,
+      status,
+    }: {
+      currentPage: number;
+      name: string;
+      status: string;
+    }) => {
+      const response = await axios.get(
+        `https://rickandmortyapi.com/api/character/?page=${currentPage}&name=${name}&status=${status}`
+      );
+      return response.data;
+    }
+  );

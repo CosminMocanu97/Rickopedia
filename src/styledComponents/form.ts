@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { WIDTH641PX } from "../utils/breakpoints";
 
 export const Form = styled.form`
   width: 100%;
@@ -11,11 +12,9 @@ export const Form = styled.form`
   margin-top: 1%;
   margin-bottom: 1%;
 
-  @media (max-width: 641px) {
+  @media (max-width: ${WIDTH641PX}) {
     flex-direction: column;
-
-    img {
-      margin-top: -35px;
-    }
+    margin-top:5%;
   }
 `;
+

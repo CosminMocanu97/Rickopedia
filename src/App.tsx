@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useMemo, useReducer } from "react";
-import { debounce } from "lodash";
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import { debounce } from "./utils/debounce";
 // Components
 import TextField from "./components/input";
 import SelectField from "./components/select";
@@ -13,161 +13,134 @@ import { Form } from "./styledComponents/form";
 import { Catalog } from "./styledComponents/catalog";
 // Images
 import logo from "./assets/rick-and-morty-logo.webp";
-import heart from "./assets/heart.webp";
-import dead from "./assets/dead.webp";
-import unknown from "./assets/unknown.webp";
 import portal from "./assets/portal.webp";
 import meeseeksBox from "./assets/meeseeksBox.webp";
 import rick from "./assets/rick.webp";
 // APIs
-import { getCharactersData } from "./api/getCharacters";
-import { getSelectOptions } from "./api/getSelectOptions";
+import { getCharacters } from "./api/getCharacters";
 // Interfaces
 import { CharacterInterface } from "./interfaces/characterProps";
-import { StateInterface } from "./interfaces/stateProps";
 // Styled app container
-import { Container } from "./styledComponents/appContainer";
-import { Error } from "./styledComponents/error";
+import { Container, Logo, MeeseeksBox } from "./styledComponents/appContainer";
+import { Error, ErrorParagraph, ErrorImage } from "./styledComponents/error";
 // Reducer
-import { reducer } from "./reducers/appReducer";
 import { newMeesseks } from "./assets/meeseeks";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState, AppDispatch } from "./redux/store";
+import { actions } from "./redux/appSlice";
 
 const audio = require("./assets/meeseeks.mp3");
 
 const App: React.FC = () => {
-  let meeseeksVoice = new Audio(audio);
-  const navigate = useNavigate()
-  const initialState: StateInterface = {
-    data: [],
-    name: "",
-    status: "",
-    currentPage: 1,
-    totalPages: 0,
-    error: false,
-    errorMessage: "",
-    loading: true
-  };
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const { data, name, status, currentPage, totalPages, error, errorMessage, loading } = state
+  const {
+    data,
+    name,
+    status,
+    currentPage,
+    totalPages,
+    error,
+    errorMessage,
+    loading,
+  } = useSelector((state: RootState) => state.app);
 
-  const [inputValue, setInputValue] = useState<string>('')
-  const [options, setOptions] = useState<string[]>([]);
+  const { reset_form, page_change, input_change, select_change, meeseeks_box } =
+    actions;
 
-  // function that returns information about the characters
-  const fetchData = async (
-    pageNumber: number,
-    name: string,
-    status: string
-  ) => {
-    dispatch({ type: "LOADING_START" })
-    try {
-      let response = await getCharactersData(pageNumber, name, status);
-      dispatch({ type: "ERROR_DISABLED" })
-      dispatch({ type: "FETCH_SUCCESS", payload: { data: response.data.results, totalPages: response.data.info.pages } })
-      dispatch({ type: "LOADING_OVER" })
-    } catch (error) {
-      dispatch({ type: "ERROR_ENABLED", payload: "No results found!" })
-      dispatch({ type: "LOADING_OVER" })
-    }
-  };
-  /* [Needs work] function used to get options for the select filter (the problem with this function
-    is that it returns only the characters for the first page which may not have all the existing statuses) */
-  const getOptions = async () => {
-    let selectOptions = new Set<string>();
-    let response = await getSelectOptions();
-    response.data.results.forEach((character: CharacterInterface) => {
-      selectOptions.add(character.status);
-    });
-    setOptions(Array.from(selectOptions));
-  };
+  const dispatch: AppDispatch = useDispatch();
+  const navigate = useNavigate();
+  const selectOptions = ["Alive", "Dead", "unknown"];
+  const [inputValue, setInputValue] = useState<string>("");
+  const meeseeksVoice = new Audio(audio);
 
   const start = () => {
-    meeseeksVoice.play();
-    dispatch({ type: "MEESEEKS_BOX", payload: newMeesseks })
-    console.log(state.data)
+    if (!data.some((data) => data.id === newMeesseks.id)) {
+      meeseeksVoice.play();
+      dispatch(meeseeks_box(newMeesseks));
+    }
   };
 
   // function that resets the form on button click (portal icon)
   const handleFormReset = () => {
-    dispatch({ type: "RESET_FORM" })
-    setInputValue('')
+    dispatch(reset_form());
+    setInputValue("");
   };
   // function that handles pagination
   const handlePagination = (pageNumber: number) => {
-    dispatch({ type: "PAGE_CHANGE", payload: pageNumber })
+    dispatch(page_change(pageNumber));
   };
   // function for the onChange event on status select
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    dispatch({ type: "SELECT_CHANGE", payload: e?.target.value })
+    dispatch(select_change(e?.target.value));
   };
   // function for the onChange event for the character's name input
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e?.target.value)
-    debouncedInput(e?.target.value)
+    setInputValue(e?.target.value);
+    debouncedInput(e?.target.value);
   };
-  /* added lodash debounce (kinda got lazy to write my own function for this) which updates the reducer state 
-  for the input after 0.3 seconds to minimize the number of api calls */
-  const debouncedInput = useMemo(() => debounce((value) => dispatch({ type: "INPUT_CHANGE", payload: value }), 300), []);
-  // onMount set the options for the select input based on the existing statuses returned from the /characters api
-  useEffect(() => {
-    getOptions();
-  }, []);
+
+  const debouncedInput = useMemo(
+    () => debounce((value: string) => dispatch(input_change(value)), 300),
+    [dispatch, input_change]
+  );
+
   // onUpdate fetch new data if any of the 3 parameteres from the dependecy array changes
   useEffect(() => {
-    fetchData(currentPage, name, status);
-  }, [currentPage, name, status]);
+    dispatch(getCharacters({ currentPage, name, status }));
+  }, [currentPage, name, status, dispatch]);
 
   return (
     <Container>
-          <img onClick={start} src={meeseeksBox} alt="" className="meeseeksBox" />
-          <img src={logo} alt="logo" className="logo" />
+      <MeeseeksBox onClick={start} src={meeseeksBox} alt="" />
+      <Logo src={logo} alt="logo" />
 
-          <Form onReset={handleFormReset}>
-            <TextField value={inputValue} onChange={handleChange} placeholder={`Character's name`} />
-            <SelectField
-              value={status}
-              onChange={handleSelectChange}
-              options={options}
-            />
-            <Button type="reset" imgSrc={portal} alt="" />
-          </Form>
+      <Form onReset={handleFormReset}>
+        <TextField
+          value={inputValue}
+          onChange={handleChange}
+          placeholder={`Character's name`}
+        />
+        <SelectField
+          value={status}
+          onChange={handleSelectChange}
+          options={selectOptions}
+        />
+        <Button type="reset" imgSrc={portal} alt="" />
+      </Form>
 
-          {loading ? <Loading /> :
-          error ? (
-            <Error>
-              <img src={rick} alt="" />
-              <p> {errorMessage} </p>
-            </Error>
-          ) : (
-            <>
-              <Catalog>
-                {data.map((data: CharacterInterface, index: number) => (
-                  <Card
-                    key={index}
-                    onClick={() => navigate(`/${data.id}`)}
-                    img={
-                      data.status === "Alive"
-                        ? heart
-                        : data.status === "Dead"
-                          ? dead
-                          : unknown
-                    }
-                    name={data.name}
-                    status={data.status}
-                    avatar={data.image}
-                  />
-                ))}
-              </Catalog>
+      <React.Fragment>
+        {loading && <Loading />}
 
-              {totalPages > 1 && (
-                <Pagination
-                  page={state.currentPage}
-                  totalPages={totalPages}
-                  handlePagination={handlePagination}
+        {error && (
+          <Error>
+            <ErrorImage src={rick} alt="" />
+            <ErrorParagraph> {errorMessage} </ErrorParagraph>
+          </Error>
+        )}
+
+        {!loading && !error && data.length > 0 && (
+          <>
+            <Catalog>
+              {data.map((data: CharacterInterface) => (
+                <Card
+                  key={data.id}
+                  onClick={() => navigate(`/character/${data.id}`)}
+                  name={data.name}
+                  status={data.status}
+                  avatar={data.image}
                 />
-              )}
-            </>
-          )}
+              ))}
+            </Catalog>
+
+            {totalPages > 1 && (
+              <Pagination
+                page={currentPage}
+                totalPages={totalPages}
+                handlePagination={handlePagination}
+              />
+            )}
+          </>
+        )}
+      </React.Fragment>
     </Container>
   );
 };

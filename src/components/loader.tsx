@@ -1,30 +1,10 @@
-import portal from '../assets/portal.webp'
-import styled from 'styled-components';
-
-const Loader = styled.div`
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%,-50%);
-
-    img {
-        height:100px;
-        animation: spin infinite 2s linear;
-    }
-
-    @keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-`
+import portal from "../assets/portal.webp";
+import { Loader, Img } from "../styledComponents/loader";
 
 const Loading = () => {
   return (
     <Loader>
-        <img src={portal} alt="" />
+      <Img src={portal} alt="" />
     </Loader>
   );
 };

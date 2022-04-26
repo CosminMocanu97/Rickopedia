@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { WIDTH641PX } from "../utils/breakpoints";
 
 export const Catalog = styled.div`
   display: inline-flex;
@@ -9,11 +10,7 @@ export const Catalog = styled.div`
   gap: 15px;
   margin-bottom: 50px;
 
-  div {
-    flex: 0 0 calc(20% - 30px);
-  }
-
-  @media (max-width: 641px) {
+  @media (max-width: ${WIDTH641PX}) {
     width: 100%;
   }
 `;

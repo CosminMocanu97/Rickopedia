@@ -1,137 +1,104 @@
-import React, { useEffect, useReducer } from "react";
-import classNames from "classnames";
+import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Loading from "./loader";
 // API
-import { getSingleCharacterData } from "../api/getSingleCharacter";
-import { getEpisodeName } from "../api/getEpisode";
-// Images
-import male from "../assets/male.webp";
-import female from "../assets/female.webp";
-import heart from "../assets/heart.webp";
-import species from "../assets/species.webp";
-import location from "../assets/location.webp";
-import camera from "../assets/camera.webp";
-import genderless from "../assets/genderless.webp";
-import unknown from "../assets/unknown.webp";
-import dead from "../assets/dead.webp";
+import { getSingleCharacter } from "../api/getSingleCharacter";
 // Styled component
-import { CharacterDetailsContainer } from "../styledComponents/characterDetailsContainer";
+import {
+  Avatar,
+  CameraImage,
+  CharacterDetailsContainer,
+  CharacterInfoWrapper,
+  Details,
+  GenderBadge,
+  Location,
+  Profile,
+  Species,
+  Status,
+  UnorderedList,
+  Wrapper,
+} from "../styledComponents/characterDetailsContainer";
+// FC
+import Loading from "./loader";
 // Interface
 import { EpisodeInterface } from "../interfaces/episodeProps";
-import { CharacterStateInterface } from "../interfaces/detailsStateProps";
-// Reducer
-import { characterReducer } from "../reducers/characterDetailsReducer";
+// Redux
+import { useSelector, useDispatch } from "react-redux";
+import { RootState, AppDispatch } from "../redux/store";
 
 const CharacterDetails = () => {
+  const dispatch: AppDispatch = useDispatch();
   const { id } = useParams<string>();
   const navigate = useNavigate();
-  const initialState: CharacterStateInterface = {
-    data: undefined,
-    episodes: [],
-    loading: true
-  };
-  const [state, dispatch] = useReducer(characterReducer, initialState);
-  const { data, episodes, loading } = state;
+  const { data, episodes, loading } = useSelector(
+    (state: RootState) => state.character
+  );
 
   // API call to get character's data and name of all episodes
   useEffect(() => {
     const fetchData = async (id: string) => {
-      dispatch({ type: "LOADING_START" })
       try {
-        let response = await getSingleCharacterData(id);
-        let URLs = response.data.episode;
-        let listOfEpisodes = await getEpisodeName(URLs);
-        dispatch({
-          type: "FETCH_SUCCESS",
-          payload: { data: response.data, episodeList: listOfEpisodes },
-        });
-        dispatch({ type: "LOADING_OVER" })
+        const resultAction = await dispatch(getSingleCharacter(id));
+        if (resultAction.meta.requestStatus === "rejected") {
+          throw new Error(`Character with id ${id} doesn't exist`);
+        }
       } catch (error) {
-        dispatch({ type: "LOADING_OVER" })
-        navigate("/");
+        navigate("/", { replace: true });
       }
     };
 
-    if (id) fetchData(id);
-  }, [id, navigate]);
+    if (id) {
+      fetchData(id);
+    }
+  }, [id, dispatch, navigate]);
 
   return (
-    <CharacterDetailsContainer>
-    {loading ? <Loading /> :
-      data && (
-        <div className="wrapper">
-          <div className="profile">
-            <h3> {data.name} </h3>
-            <img src={data.image} alt="" />
-          </div>
+    <React.Fragment>
+      {loading && <Loading />}
 
-          <div className="characterInfo">
-            <div>
-              <p
-                className={classNames("genderBadge", {
-                  maleBadge: data.gender === "Male",
-                  femaleBadge: data.gender === "Female",
-                })}
-              >
-                <img
-                  src={
-                    data.gender === "Male"
-                      ? male
-                      : data.gender === "Female"
-                      ? female
-                      : data.gender === "Genderless"
-                      ? genderless
-                      : unknown
-                  }
-                  alt=""
-                />
-                {data.gender}
-              </p>
-            </div>
+      {data && (
+        <CharacterDetailsContainer>
+          <Wrapper>
+            <Profile>
+              <h3> {data.name} </h3>
+              <Avatar src={data.image} alt="" />
+            </Profile>
 
-            <div>
-              <p className="species">
-                <img src={species} alt="Species:" /> {data.species}
-              </p>
-              <p className="location">
-                <img src={location} alt="Location:" /> {data.location.name}
-              </p>
-              <p
-                className={classNames({
-                  alive: data.status === "Alive",
-                  dead: data.status === "Dead",
-                  unknown: data.status === "unknown",
-                })}
-              >
-                <img
-                  src={
-                    data.status === "Alive"
-                      ? heart
-                      : data.status === "Dead"
-                      ? dead
-                      : unknown
-                  }
-                  alt="Status:"
-                />
-                {data.status}
-              </p>
-            </div>
-          </div>
+            <CharacterInfoWrapper>
+              <GenderBadge gender={data.gender}>
+                <p>
+                  <img alt="" />
+                  {data.gender}
+                </p>
+              </GenderBadge>
 
-          <label>
-            <img className="camera" src={camera} alt="" />
-          </label>
-          <ul className="list">
-            {episodes.map((episodeName: EpisodeInterface, index: number) => (
-              <li key={index}>
-                <span> {episodeName.episode}</span> : {episodeName.name}
-              </li>
-            ))}
-          </ul>
-        </div>
+              <Details>
+                <Species>
+                  <img alt="Species:" /> {data.species}
+                </Species>
+
+                <Location>
+                  <img alt="Location:" /> {data.location.name}
+                </Location>
+
+                <Status status={data.status}>
+                  <img alt="Status:" />
+                  {data.status}
+                </Status>
+              </Details>
+            </CharacterInfoWrapper>
+
+            <CameraImage alt="" />
+            <UnorderedList>
+              {episodes.map((episode: EpisodeInterface) => (
+                <li key={episode.id}>
+                  <span> {episode.episode}</span> : {episode.name}
+                </li>
+              ))}
+            </UnorderedList>
+          </Wrapper>
+        </CharacterDetailsContainer>
       )}
-    </CharacterDetailsContainer>
+    </React.Fragment>
   );
 };
 

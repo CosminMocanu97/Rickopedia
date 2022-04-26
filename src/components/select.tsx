@@ -1,18 +1,18 @@
 import { SelectProps } from "../interfaces/selectProps";
-import { Select } from "../styledComponents/select";
+import { Select, Option, EmptyOption } from "../styledComponents/select";
 
 const SelectField = ({ value, onChange, options }: SelectProps) => {
   return (
     <Select
       onChange={onChange}
       value={value}
-      style={value ? { color: "#00b1c8" } : { color: "#757575" }}
+      isValueSelected = {value ? true : false}
     >
-      <option className="emptyOption" value=""> All </option>
+      <EmptyOption className="emptyOption" value=""> All </EmptyOption>
       {options.map((option, key) => (
-        <option key={key} value={option}>
+        <Option key={key} value={option}>
           {option}
-        </option>
+        </Option>
       ))}
     </Select>
   );

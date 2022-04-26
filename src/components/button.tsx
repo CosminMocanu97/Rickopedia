@@ -1,10 +1,10 @@
 import { ButtonProps } from "../interfaces/buttonProps";
-import { Button } from "../styledComponents/button";
+import { Button, Img } from "../styledComponents/button";
 
 const SearchButton = ({ label, type, imgSrc, alt }: ButtonProps) => {
   return (
     <Button type={type}>
-      <img src={imgSrc} alt={alt} /> {label}
+      <Img src={imgSrc} alt={alt} /> {label}
     </Button>
   );
 };

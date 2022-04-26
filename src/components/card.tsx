@@ -1,26 +1,18 @@
 import { CardProps } from "../interfaces/cardProps";
-import { CardContainer } from "../styledComponents/card";
+import { CardContainer, Avatar, Paragraph, StatusParagraph, StatusImage } from "../styledComponents/card";
 
-const Card = ({ name, status, avatar, img, onClick }: CardProps) => {
+const Card = ({ name, status, avatar, onClick }: CardProps) => {
   return (
     <CardContainer onClick={onClick}>
-      <img src={avatar} alt="Avatar" className="avatar" />
+      <Avatar src={avatar} alt="Avatar"/>
       <div>
-        <p>
+        <Paragraph>
           <b>{name}</b>
-        </p>
-        <p
-          style={{
-            color:
-              status === "Alive"
-                ? "#0BDA51"
-                : status === "Dead"
-                ? "#FF0038"
-                : "#757575",
-          }}
-        >
-          <img src={img} alt="" /> <b>{status}</b>{" "}
-        </p>
+        </Paragraph>
+
+        <StatusParagraph status={status}>
+          <StatusImage status={status} alt="" /> <b>{status}</b>
+        </StatusParagraph>
       </div>
     </CardContainer>
   );

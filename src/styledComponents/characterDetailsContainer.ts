@@ -1,5 +1,17 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
+// Images
 import background from "../assets/background2.webp";
+import male from "../assets/male.webp";
+import female from "../assets/female.webp";
+import genderless from "../assets/genderless.webp";
+import unknown from "../assets/unknown.webp";
+import heart from "../assets/heart.webp";
+import dead from "../assets/dead.webp";
+import camera from "../assets/camera.webp";
+import species from "../assets/species.webp";
+import location from "../assets/location.webp";
+// Breakpoints
+import { WIDTH641PX, WIDTH420PX } from "../utils/breakpoints";
 
 export const CharacterDetailsContainer = styled.div`
   height: 100%;
@@ -9,205 +21,216 @@ export const CharacterDetailsContainer = styled.div`
   background-repeat: no-repeat;
   background-position: center center;
   background-attachment: fixed;
-
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: left;
 
-  .wrapper {
-    margin-left: 4%;
-    min-height: 100vh;
-    height: auto;
-    width: 60%;
-    white-space: normal;
-    font-size: 18px;
-    animation: fadein 1s;
-  }
-
-  .profile {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-family: RickAndMorty;
-    color: #0bda51;
-
-    img {
-      height: 150px;
-      width: 150px;
-      border-radius: 5px;
-    }
-  }
-
-  .characterInfo {
-    display: flex;
-    flex-direction: column;
-    font-family: RickAndMorty;
-    justify-content: flex-start;
-    color: rgb(0, 176, 200);
-
-    span {
-      color: white;
-    }
-
-    div {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      gap: 30px;
-    }
-  }
-
-  .list {
-    font-family: RickAndMorty;
-    font-size: 18px;
-    list-style-type: none;
-    display: flex;
-    flex-direction: column;
-    color: rgb(0, 176, 200);
-
-    span {
-      font-weight: bold;
-      color: #757575;
-    }
-  }
-
-  .genderBadge {
-    border: 2px solid #757575;
-    padding: 2px 20px;
-    font-weight: bold;
-    border-radius: 10px;
-    color: #757575;
-    display: flex;
-    gap: 10px;
-    justifiy-content: center;
-    align-items: center;
-
-    img {
-      height: 30px;
-    }
-  }
-
-  .maleBadge {
-    border: 2px solid rgb(31, 151, 245);
-    padding: 2px 20px;
-    font-weight: bold;
-    border-radius: 10px;
-    color: rgb(31, 151, 245);
-    display: flex;
-    gap: 10px;
-    justifiy-content: center;
-    align-items: center;
-
-    img {
-      height: 30px;
-    }
-  }
-
-  .femaleBadge {
-    border: 2px solid rgb(249, 108, 177);
-    padding: 2px 20px;
-    font-weight: bold;
-    border-radius: 10px;
-    color: rgb(249, 108, 177);
-    display: flex;
-    gap: 10px;
-    justifiy-content: center;
-    align-items: center;
-
-    img {
-      height: 30px;
-    }
-  }
-
-  .alive,
-  .dead,
-  .unknown {
-    display: flex;
-    justifiy-content: center;
-    align-items: center;
-    font-weight: bold;
-
-    img {
-      height: 50px;
-    }
-  }
-
-  .alive {
-    color: #0bda51;
-  }
-
-  .dead {
-    color: #ff0038;
-  }
-
-  .unknown {
-    color: #757575;
-  }
-
-  .species {
-    display: flex;
-    justifiy-content: center;
-    align-items: center;
-    color: #e0ac69;
-    font-weight: bold;
-
-    img {
-      margin-right: 5px;
-      height: 40px;
-    }
-  }
-
-  .location {
-    display: flex;
-    justifiy-content: center;
-    align-items: center;
-    color: #858585;
-    font-weight: bold;
-
-    img {
-      height: 50px;
-    }
-  }
-
-  .camera {
-    height: 175px;
-  }
-
-  @media (max-width: 641px) {
+  @media (max-width: ${WIDTH641PX}) {
     justify-content: center;
-
-    .wrapper {
-      width: 100%;
-      margin: 0;
-    }
   }
 
-  @media (max-width: 420px) {
-    .camera {
-      height: 15vh;
-    }
-    .characterInfo {
-      div {
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 0px;
-      }
-
-      p {
-        margin: 0;
-        margin-top: 10px;
-        margin-bottom: 5px;
-      }
-    }
-
-    .list {
-      padding: 5px;
-    }
-  }
-
-  @media (min-width: 641px) {
+  @media (min-width: ${WIDTH641PX}) {
     background-size: cover;
+  }
+`;
+
+export const Wrapper = styled.div`
+  margin-left: 4%;
+  min-height: 100vh;
+  height: auto;
+  width: 60%;
+  white-space: normal;
+  font-size: 18px;
+  animation: fadein 1s;
+
+  @media (max-width: ${WIDTH641PX}) {
+    width: 100%;
+    margin: 0;
+  }
+`;
+
+export const Profile = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: RickAndMorty;
+  color: #0bda51;
+`;
+
+export const Avatar = styled.img`
+  height: 150px;
+  width: 150px;
+  border-radius: 5px;
+`;
+
+export const CharacterInfoWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  font-family: RickAndMorty;
+  justify-content: flex-start;
+  color: rgb(0, 176, 200);
+`;
+
+export const GenderBadge = styled.div<{ gender?: string }>`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 30px;
+
+  p {
+    ${(props) =>
+      props.gender === "Male"
+        ? `
+      border: 2px solid rgb(31, 151, 245);
+      color: rgb(31, 151, 245);
+
+      img {
+        content: url(${male});
+      }
+    `
+        : props.gender === "Female"
+        ? `
+      border: 2px solid rgb(249, 108, 177);
+      color: rgb(249, 108, 177);
+
+      img {
+        content: url(${female});
+      }
+    `
+        : props.gender === "Genderless"
+        ? `
+      border: 2px solid #757575;
+      color: #757575;
+
+      img {
+        content: url(${genderless});
+      } 
+    `
+        : `
+      border: 2px solid #757575;
+      color: #757575;
+
+      img {
+        content: url(${unknown});
+      }
+    `}
+
+    padding: 2px 20px;
+    font-weight: bold;
+    border-radius: 10px;
+    display: flex;
+    gap: 10px;
+    justifiy-content: center;
+    align-items: center;
+
+    img {
+      height: 30px;
+    }
+  }
+`;
+
+export const Details = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 30px;
+
+  @media (max-width: ${WIDTH420PX}) {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0px;
+
+    p {
+      margin: 0;
+      margin-bottom: 5px;
+    }
+  }
+`;
+
+const paragraph = css`
+  display: flex;
+  justifiy-content: center;
+  align-items: center;
+  font-weight: bold;
+`;
+
+export const Species = styled.p`
+  ${paragraph}
+  color: #e0ac69;
+
+  img {
+    content:url(${species});
+    margin-right: 5px;
+    height: 40px;
+  }
+`;
+
+export const Location = styled.p`
+  ${paragraph}
+  color: #858585;
+
+  img {
+    content: url(${location});
+    margin-right: 5px;
+    height: 50px;
+  }
+`;
+
+export const Status = styled.p<{ status?: string }>`
+  ${paragraph}
+
+  ${(props) =>
+    props.status === "Alive"
+      ? `
+    color: #0bda51;
+
+    img {
+      content: url(${heart});
+    }
+    `
+      : props.status === "Dead"
+      ? `color: #ff0038 ;
+
+    img {
+      content: url(${dead});
+    }
+    `
+      : `color: #757575;
+    
+    img {
+      content: url(${unknown});
+    }`}
+
+    img {
+    height: 50px;
+  }
+`;
+
+export const CameraImage = styled.img`
+  height: 175px;
+  content: url(${camera});
+
+  @media (max-width: ${WIDTH420PX}) {
+    height: 15vh;
+  }
+`;
+
+export const UnorderedList = styled.ul`
+  font-family: RickAndMorty;
+  font-size: 18px;
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  color: rgb(0, 176, 200);
+
+  span {
+    font-weight: bold;
+    color: #757575;
+  }
+
+  @media (max-width: ${WIDTH420PX}) {
+    padding: 5px;
   }
 `;
