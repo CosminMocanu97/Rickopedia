@@ -31,6 +31,7 @@ export const Logo = styled.img`
 `;
 
 export const MeeseeksBox = styled.img`
+  user-select: none;
   position: fixed;
   height: 50px;
   left: 0;

@@ -5,8 +5,8 @@ import { WIDTH641PX } from "../utils/breakpoints";
 export const Button = styled.button`
   background: transparent;
   border: none;
-  height: 125px;
-  width: 130px;
+  height: 110px;
+  width: 120px;
   border-radius: 50%;
 
   @media (max-width: ${WIDTH641PX}) {

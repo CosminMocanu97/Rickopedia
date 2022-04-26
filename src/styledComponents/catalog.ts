@@ -5,7 +5,7 @@ export const Catalog = styled.div`
   display: inline-flex;
   flex-wrap: wrap;
   justify-content: center;
-  width: 70%;
+  width: 60%;
   position: relative;
   gap: 15px;
   margin-bottom: 50px;
